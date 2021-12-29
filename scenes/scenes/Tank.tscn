@@ -1,0 +1,93 @@
+[gd_scene load_steps=20 format=2]
+
+[ext_resource path="res://assets/Sprite/Canon/Frame 1.png" type="Texture" id=1]
+[ext_resource path="res://assets/Sprite/Body/Frame 3.png" type="Texture" id=2]
+[ext_resource path="res://Tank.vs" type="Script" id=3]
+[ext_resource path="res://Canon.vs" type="Script" id=4]
+[ext_resource path="res://assets/Sound/Shoot.wav" type="AudioStream" id=5]
+[ext_resource path="res://assets/Sound/Death.wav" type="AudioStream" id=6]
+[ext_resource path="res://assets/Sound/Movement.wav" type="AudioStream" id=7]
+[ext_resource path="res://assets/Sprite/Body/Frame 4.png" type="Texture" id=8]
+[ext_resource path="res://assets/Sprite/Body/Frame 6.png" type="Texture" id=9]
+[ext_resource path="res://assets/Sprite/Body/Frame 1.png" type="Texture" id=10]
+[ext_resource path="res://assets/Sprite/Body/Frame 2.png" type="Texture" id=11]
+[ext_resource path="res://assets/Sprite/Body/Frame 5 .png" type="Texture" id=12]
+[ext_resource path="res://assets/Sprite/Canon/Frame 3.png" type="Texture" id=13]
+[ext_resource path="res://assets/Sprite/Canon/Frame 2.png" type="Texture" id=14]
+
+[sub_resource type="SpriteFrames" id=4]
+animations = [ {
+"frames": [ ExtResource( 10 ), ExtResource( 11 ), ExtResource( 2 ), ExtResource( 8 ), ExtResource( 12 ), ExtResource( 9 ) ],
+"loop": true,
+"name": "default",
+"speed": 20.0
+} ]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 36.1825, 38.9904 )
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 40.4203, 43.2282 )
+
+[sub_resource type="SpriteFrames" id=5]
+animations = [ {
+"frames": [ ExtResource( 1 ), ExtResource( 14 ), ExtResource( 13 ), ExtResource( 14 ), ExtResource( 1 ) ],
+"loop": false,
+"name": "default",
+"speed": 30.0
+} ]
+
+[sub_resource type="CircleShape2D" id=3]
+radius = 109.223
+
+[node name="Tank" type="KinematicBody2D" groups=[
+"Tank",
+]]
+pause_mode = 2
+scale = Vector2( 0.5, 0.5 )
+script = ExtResource( 3 )
+
+[node name="Body" type="AnimatedSprite" parent="."]
+scale = Vector2( 2, 2 )
+frames = SubResource( 4 )
+offset = Vector2( 0, -8 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
+
+[node name="Area2D" type="Area2D" parent="CollisionShape2D"]
+collision_layer = 0
+collision_mask = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CollisionShape2D/Area2D"]
+shape = SubResource( 2 )
+
+[node name="Canon" type="AnimatedSprite" parent="."]
+scale = Vector2( 2, 2 )
+frames = SubResource( 5 )
+offset = Vector2( 8, 0 )
+script = ExtResource( 4 )
+
+[node name="Position2D" type="Position2D" parent="Canon"]
+position = Vector2( 50, 0 )
+scale = Vector2( 0.75, 0.75 )
+
+[node name="Line_of_Sight" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Line_of_Sight"]
+shape = SubResource( 3 )
+
+[node name="Shoot" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 5 )
+
+[node name="Death" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 6 )
+
+[node name="Movement" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 7 )
+volume_db = -15.0
+pitch_scale = 0.5
+
+[connection signal="area_entered" from="CollisionShape2D/Area2D" to="." method="_on_Area2D_area_entered"]

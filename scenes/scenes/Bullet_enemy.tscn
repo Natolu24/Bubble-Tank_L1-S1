@@ -1,0 +1,52 @@
+[gd_scene load_steps=16 format=2]
+
+[ext_resource path="res://assets/Sprite/Bubble/Frame-2.png" type="Texture" id=1]
+[ext_resource path="res://Bullet_enemy.vs" type="Script" id=2]
+[ext_resource path="res://assets/Sound/Bounce.wav" type="AudioStream" id=3]
+[ext_resource path="res://assets/Sprite/Bubble/Frame-3.png" type="Texture" id=4]
+[ext_resource path="res://assets/Sprite/Bubble/Frame-1.png" type="Texture" id=5]
+[ext_resource path="res://assets/Sprite/Bubble/Frame-8.png" type="Texture" id=6]
+[ext_resource path="res://assets/Sprite/Bubble/Frame-9.png" type="Texture" id=7]
+[ext_resource path="res://assets/Sprite/Bubble/Frame-10.png" type="Texture" id=8]
+[ext_resource path="res://assets/Sprite/Bubble/Frame-4.png" type="Texture" id=9]
+[ext_resource path="res://assets/Sprite/Bubble/Frame-5.png" type="Texture" id=10]
+[ext_resource path="res://assets/Sprite/Bubble/Frame-6.png" type="Texture" id=11]
+[ext_resource path="res://assets/Sprite/Bubble/Frame-7.png" type="Texture" id=12]
+
+[sub_resource type="SpriteFrames" id=3]
+animations = [ {
+"frames": [ ExtResource( 5 ), ExtResource( 1 ), ExtResource( 4 ), ExtResource( 9 ), ExtResource( 10 ), ExtResource( 11 ), ExtResource( 12 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ) ],
+"loop": false,
+"name": "default",
+"speed": 10.0
+} ]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 6.70905
+
+[sub_resource type="CircleShape2D" id=2]
+radius = 7.31191
+
+[node name="Bullet_enemy" type="KinematicBody2D"]
+position = Vector2( 666, 666 )
+script = ExtResource( 2 )
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+scale = Vector2( 0.4, 0.4 )
+frames = SubResource( 3 )
+offset = Vector2( -0.5, 4.5 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
+
+[node name="Area2D" type="Area2D" parent="CollisionShape2D"]
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CollisionShape2D/Area2D"]
+shape = SubResource( 2 )
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 3 )
+
+[connection signal="area_entered" from="CollisionShape2D/Area2D" to="." method="_on_Area2D_area_entered"]
